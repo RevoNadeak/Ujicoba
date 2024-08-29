@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Perkalian</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 1000px; /* Maximum width to fit within screen */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        input {
+            width: 50px;
+            text-align: center;
+            /* Hide spin buttons on input[type=number] */
+            -moz-appearance: textfield;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        input::-webkit-inner-spin-button, 
+        input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .correct {
+            background-color: lightblue; /* Color for correct answers */
+        }
+        .incorrect {
+            background-color: lightcoral; /* Color for incorrect answers */
+        }
+        .empty {
+            background-color: lightyellow; /* Color for empty cells */
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background-color: #45a049;
+        }
+        @media (max-width: 600px) {
+            input {
+                width: 40px;
+                font-size: 14px;
+            }
+            button {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PERKALIAN NIH DEK. REVO AJA BISA</h1>
+        <h3>se"jago" apa sih lu sok ngelebihin REVO?</h3>
+        <table id="multiplication-table">
+            <thead>
+                <tr>
+                    <th>X</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                    <th>10</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Baris untuk tabel -->
+            </tbody>
+        </table>
+        <button id="action-button" onclick="handleButtonClick()">udh Selesai atau GAK BISA?</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        // Generate table
+        const tableBody = document.querySelector('#multiplication-table tbody');
+        for (let i = 1; i <= 10; i++) {
+            let row = '<tr>';
+            row += `<th>${i}</th>`;
+            for (let j = 1; j <= 10; j++) {
+                row += `<td><input type="number" id="cell-${i}-${j}" /></td>`;
+            }
+            row += '</tr>';
+            tableBody.innerHTML += row;
+        }
+
+        let answersChecked = false;
+
+        function handleButtonClick() {
+            if (answersChecked) {
+                resetTest(); // If answers are checked, reset the test
+            } else {
+                checkAnswers(); // Otherwise, check the answers
+            }
+        }
+
+        function checkAnswers() {
+            if (answersChecked) return; // Prevent checking answers again
+
+            let score = 0;
+            for (let i = 1; i <= 10; i++) {
+                for (let j = 1; j <= 10; j++) {
+                    const input = document.getElementById(`cell-${i}-${j}`);
+                    const correctAnswer = i * j;
+                    if (input.value === '') {
+                        input.parentElement.classList.add('empty');
+                    } else if (parseInt(input.value) === correctAnswer) {
+                        input.parentElement.classList.add('correct');
+                        score++;
+                    } else {
+                        input.parentElement.classList.add('incorrect');
+                    }
+                }
+            }
+            const totalCells = 100; // 10x10 table
+            let resultText = `skor lu itu cuman: ${score} dari ${totalCells}. `;
+            resultText += score >= 75 ? 'GACORR BOSS TINGKATKAN & PERTAHANKAN!' : 'KALO SEGINI DOANG AYAM GW JUGA BISA WKWKWK.';
+            document.getElementById('result').innerText = resultText;
+
+            // Disable inputs and change button text
+            disableInputs();
+            document.getElementById('action-button').innerText = 'Ulang dek kalo segini nanti mamak lu malu';
+            answersChecked = true; // Mark answers as checked
+        }
+
+        function disableInputs() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.disabled = true);
+        }
+
+        function resetTest() {
+            // Enable inputs, clear classes, and change button text
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.disabled = false;
+                input.value = ''; // Clear input values
+                input.parentElement.classList.remove('correct', 'incorrect', 'empty'); // Remove all background colors
+            });
+            document.getElementById('action-button').innerText = 'udh Selesai atau GAK BISA?';
+            document.getElementById('result').innerText = '';
+            answersChecked = false; // Allow answers to be checked again
+        }
+    </script>
+</body>
+</html>
